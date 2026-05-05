@@ -1,0 +1,195 @@
+use studentDB
+db.createCollection("students")
+
+db.students.insertMany([
+  { _id: 1, name: "Rahul", age: 20, course: "CS", marks: 75 },
+  { _id: 2, name: "Sneha", age: 21, course: "IT", marks: 85 },
+  { _id: 3, name: "Amit", age: 22, course: "CS", marks: 65 }
+])
+
+
+db.students.save({ _id: 4, name: "Neha", age: 23, course: "ENTC", marks: 90 })
+
+
+-- Show all
+db.students.find()
+
+-- Find specific
+db.students.find({ course: "CS" })
+
+-- AND condition
+db.students.find({
+  $and: [
+    { course: "CS" },
+    { marks: { $gt: 70 } }
+  ]
+})
+
+
+-- OR condition
+db.students.find({
+  $or: [
+    { marks: { $lt: 70 } },
+    { course: "IT" }
+  ]
+})
+
+
+db.students.save({ _id: 1, name: "Rahul", age: 20, course: "CS", marks: 80 })
+
+
+db.students.updateOne(
+  { _id: 2 },
+  { $set: { marks: 88 } }
+)
+
+
+-- Delete one
+db.students.deleteOne({ _id: 3 })
+
+
+-- Delete using condition
+db.students.deleteMany({ marks: { $lt: 70 } })
+
+
+db.students.find().pretty()
+
+
+
+
+THOERY
+
+✅ Aim
+To design and implement basic Create, Read, Update, and Delete (CRUD) operations using MongoDB and to apply logical operators for efficient data manipulation and retrieval.
+
+
+
+
+
+
+
+✅ Theory: CRUD Operations using MongoDB
+MongoDB is a NoSQL database that stores data in the form of documents (JSON-like format called BSON). It is schema-less, meaning the structure of documents can vary within a collection.
+CRUD stands for:
+C – Create
+R – Read
+U – Update
+D – Delete
+These are the four basic operations used to manage data in any database.
+🔹 1. Create Operation
+The Create operation is used to insert new documents into a collection.
+Methods used: insertOne(), insertMany(), save()
+save() inserts a new document if _id does not exist
+🔹 2. Read Operation
+The Read operation is used to retrieve data from a collection.
+Method used: find()
+Supports conditions and filtering
+Logical operators like:
+$and → all conditions must be true
+$or → any one condition must be true
+🔹 3. Update Operation
+The Update operation modifies existing documents.
+Methods used: updateOne(), updateMany(), save()
+$set operator is commonly used to update specific fields
+save() updates a document if _id already exists
+🔹 4. Delete Operation
+The Delete operation removes documents from a collection.
+Methods used: deleteOne(), deleteMany()
+🔹 Logical Operators in MongoDB
+Logical operators are used to apply multiple conditions:
+$and → combines multiple conditions
+$or → selects documents matching any condition
+$gt, $lt → greater than / less than
+🔹 Advantages of MongoDB
+Flexible schema (no fixed structure)
+High performance
+Scalable (handles large data)
+Easy to store unstructured data
+
+
+✅ Conclusion (short for theory section)
+MongoDB provides an efficient way to perform CRUD operations using flexible document-based storage. Logical operators enhance querying capability, making data retrieval powerful and dynamic.
+
+
+
+SYNTAX 
+
+
+
+db.collection.insertOne({ key: value })
+db.collection.insertMany([{},{ }])
+db.collection.save({ _id: value, key: value })
+
+db.collection.find()
+db.collection.find({ key: value })
+
+db.collection.find({ $and: [{cond1}, {cond2}] })
+db.collection.find({ $or: [{cond1}, {cond2}] })
+db.collection.find({ key: { $gt: value } })
+
+
+db.collection.updateOne({ condition }, { $set: { key: value } })
+db.collection.save({ _id: value, key: value })
+
+
+db.collection.deleteOne({ condition })
+db.collection.deleteMany({ condition })
+
+
+
+VIVA
+🔹 What is MongoDB?
+MongoDB is a NoSQL database that stores data in document (JSON-like) format instead of tables.
+🔹 Is MongoDB SQL or NoSQL?
+MongoDB is a NoSQL database.
+🔹 What is a Document in MongoDB?
+A document is a JSON-like record that stores data as key–value pairs.
+🔹 What is a Collection?
+A collection is a group of documents, similar to a table in SQL.
+🔹 What is a Database in MongoDB?
+A database is a container that holds multiple collections.
+🔹 What does insertOne() do?
+It inserts a single document into a collection.
+🔹 What does insertMany() do?
+It inserts multiple documents at once.
+🔹 What does find() do?
+It retrieves all documents or matching documents from a collection.
+🔹 What does findOne() do?
+It returns only one matching document.
+🔹 What does updateOne() do?
+It updates a single document that matches the condition.
+🔹 What does updateMany() do?
+It updates multiple documents that match the condition.
+🔹 What does deleteOne() do?
+It deletes one document that matches the condition.
+🔹 What does deleteMany() do?
+It deletes multiple documents based on the condition.
+🔹 What is $set operator?
+It is used to update specific fields in a document.
+🔹 What is $push operator?
+It is used to add a value to an array field.
+🔹 What is $inc operator?
+It is used to increment a numeric value.
+🔹 What are logical operators in MongoDB?
+Logical operators are used to apply conditions:
+$and → all conditions must be true
+$or → any one condition true
+$not → negates condition
+$nor → none of the conditions should be true
+🔹 What does save() do?
+save() inserts a document if _id does not exist, otherwise it updates the existing document.
+🔹 What is _id in MongoDB?
+_id is a unique identifier (primary key) automatically generated for each document.
+🔹 Difference between SQL Table and MongoDB Collection?
+SQL Table
+MongoDB Collection
+Fixed schema
+Flexible schema
+Rows & Columns
+Documents (JSON)
+Structured data
+Semi/unstructured data
+🔹 What is BSON?
+BSON stands for Binary JSON.
+MongoDB stores data internally in BSON format for better performance.
+

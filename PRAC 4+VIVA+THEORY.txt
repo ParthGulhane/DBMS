@@ -1,0 +1,160 @@
+CODE
+🟢 1. CREATE DATABASE
+SQL
+mysql> create database SalesApp;
+Query OK, 1 row affected (0.01 sec)
+
+mysql> use SalesApp;
+Database changed
+🟢 2. CREATE TABLE
+SQL
+mysql> create table Sales (
+    -> sale_id int primary key,
+    -> product_name varchar(50) not null,
+    -> category varchar(50),
+    -> quantity int check(quantity > 0),
+    -> price int check(price > 0),
+    -> sale_date date
+    -> );
+Query OK, 0 rows affected (0.03 sec)
+🟢 3. INSERT DATA
+SQL
+mysql> insert into Sales values
+    -> (1, 'Laptop', 'Electronics', 2, 50000, '2025-01-10'),
+    -> (2, 'Mobile', 'Electronics', 5, 20000, '2025-01-12'),
+    -> (3, 'Shirt', 'Clothing', 10, 1000, '2025-01-15'),
+    -> (4, 'Jeans', 'Clothing', 6, 2000, '2025-01-18'),
+    -> (5, 'TV', 'Electronics', 1, 40000, '2025-01-20'),
+    -> (6, 'Shoes', 'Footwear', 3, 3000, '2025-01-22'),
+    -> (7, 'Sandals', 'Footwear', 5, 800, '2025-01-25');
+Query OK, 7 rows affected (0.01 sec)
+Records: 7  Duplicates: 0  Warnings: 0
+🔵 4. AGGREGATE FUNCTIONS
+🟢 Total Sales Value per Product
+SQL
+mysql> select product_name, quantity, price,
+    -> (quantity * price) as total_value
+    -> from Sales;
+🟢 COUNT
+SQL
+mysql> select count(*) as total_records
+    -> from Sales;
+🟢 SUM
+SQL
+mysql> select sum(quantity * price) as total_sales
+    -> from Sales;
+🟢 AVG
+SQL
+mysql> select avg(price) as average_price
+    -> from Sales;
+🟢 MAX / MIN
+SQL
+mysql> select max(price) as max_price,
+    -> min(price) as min_price
+    -> from Sales;
+🔵 5. GROUP BY
+🟢 Category-wise Total Sales
+SQL
+mysql> select category, sum(quantity * price) as total_sales
+    -> from Sales
+    -> group by category;
+🟢 Category-wise Total Quantity
+SQL
+mysql> select category, sum(quantity) as total_quantity
+    -> from Sales
+    -> group by category;
+🟢 Category-wise Average Price
+SQL
+mysql> select category, avg(price) as avg_price
+    -> from Sales
+    -> group by category;
+🔵 6. HAVING CLAUSE
+🟢 Categories with Total Sales > 50000
+SQL
+mysql> select category, sum(quantity * price) as total_sales
+    -> from Sales
+    -> group by category
+    -> having sum(quantity * price) > 50000;
+🟢 Categories with More Than 5 Items Sold
+SQL
+mysql> select category, sum(quantity) as total_quantity
+    -> from Sales
+    -> group by category
+    -> having sum(quantity) > 5;
+
+
+
+THEORY
+
+
+📌 Aim
+To use aggregate functions along with GROUP BY and HAVING clauses in MySQL to retrieve summarized and grouped data from the database.
+📘 Theory
+Aggregate functions in DBMS are used to perform calculations on a set of values and return a single summarized result.
+Common aggregate functions:
+COUNT() → Counts number of rows
+SUM() → Calculates total sum
+AVG() → Finds average value
+MAX() → Finds highest value
+MIN() → Finds lowest value
+GROUP BY is used to group rows that have the same values in a column. It is mainly used with aggregate functions to get category-wise results.
+HAVING clause is used to filter groups created by GROUP BY. Unlike WHERE, it works on aggregated data.
+💻 Syntax
+Aggregate Functions
+SQL
+SELECT COUNT(column), SUM(column), AVG(column), MAX(column), MIN(column)
+FROM table_name;
+GROUP BY
+SQL
+SELECT column, aggregate_function(column)
+FROM table_name
+GROUP BY column;
+HAVING Clause
+SQL
+SELECT column, aggregate_function(column)
+FROM table_name
+GROUP BY column
+HAVING condition;
+🧾 Conclusion
+Aggregate functions are used to perform calculations on data sets. GROUP BY helps in grouping similar records, and HAVING is used to filter those grouped results. Together, they help in generating meaningful summary reports from large datasets in a database.
+
+
+
+
+VIVA
+
+
+
+📌 Exp 4 — Aggregate Functions + GROUP BY (Viva Questions)
+🔵 What are aggregate functions?
+Aggregate functions perform calculations on a set of values and return a single result.
+Common aggregate functions:
+COUNT() → counts number of rows
+SUM() → adds all values
+AVG() → calculates average
+MIN() → finds smallest value
+MAX() → finds largest value
+🔵 What does GROUP BY do?
+GROUP BY groups rows that have the same values in a column. It is used with aggregate functions to get category-wise results.
+Example: department-wise average marks.
+🔵 What does HAVING do?
+HAVING is used to filter grouped results after applying GROUP BY. It works on aggregate results.
+🔵 Difference between WHERE and HAVING?
+WHERE → filters individual rows before grouping
+HAVING → filters groups after grouping
+👉 WHERE works on raw data
+👉 HAVING works on aggregated data
+🔵 Can you use aggregate functions in WHERE?
+❌ No
+Aggregate functions like SUM, AVG, COUNT cannot be used in WHERE because WHERE filters rows before aggregation.
+🔵 Can HAVING work without GROUP BY?
+✔ Yes
+If GROUP BY is not used, the whole table is treated as a single group, and HAVING filters the final result.
+Example:
+SQL
+SELECT AVG(marks)
+FROM Students
+HAVING AVG(marks) > 80;
+
+
+

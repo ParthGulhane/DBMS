@@ -1,0 +1,252 @@
+CODE
+
+📌 EXP — DDL Commands with Integrity Constraints (MySQL Command Line Client)
+
+
+---
+
+🟢 1. CREATE DATABASE
+
+mysql> create database CollegeApp;
+Query OK, 1 row affected (0.01 sec)
+
+mysql> use CollegeApp;
+Database changed
+
+
+---
+
+🟢 2. CREATE TABLE (with Integrity Constraints)
+
+mysql> create table Department (
+    -> dept_id int primary key,
+    -> dept_name varchar(50) not null unique
+    -> );
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> create table Student (
+    -> student_id int primary key,
+    -> name varchar(50) not null,
+    -> email varchar(100) unique,
+    -> age int check(age >= 18),
+    -> dept_id int,
+    -> foreign key (dept_id) references Department(dept_id)
+    -> );
+Query OK, 0 rows affected (0.04 sec)
+
+
+---
+
+🟢 3. INSERT DATA
+
+mysql> insert into Department values
+    -> (1, 'Computer'),
+    -> (2, 'IT'),
+    -> (3, 'Mechanical');
+Query OK, 3 rows affected (0.01 sec)
+
+mysql> insert into Student values
+    -> (101, 'Asha', 'asha@gmail.com', 20, 1),
+    -> (102, 'Ravi', 'ravi@gmail.com', 19, 2),
+    -> (103, 'Neha', 'neha@gmail.com', 21, 1);
+Query OK, 3 rows affected (0.01 sec)
+
+
+---
+
+🔵 4. ALTER TABLE (Modify Structure)
+
+➤ Add Column
+
+mysql> alter table Student
+    -> add phone varchar(15);
+Query OK, 0 rows affected (0.01 sec)
+
+➤ Modify Column
+
+mysql> alter table Student
+    -> modify name varchar(100);
+Query OK, 0 rows affected (0.01 sec)
+
+
+---
+
+🔵 5. RENAME TABLE
+
+mysql> rename table Student to Students;
+Query OK, 0 rows affected (0.01 sec)
+
+
+---
+
+🔵 6. TRUNCATE TABLE
+
+mysql> truncate table Students;
+Query OK, 0 rows affected (0.01 sec)
+
+
+---
+
+🔵 7. DROP TABLE
+
+mysql> drop table Students;
+Query OK, 0 rows affected (0.01 sec)
+
+
+---
+
+🧾 CONCLUSION
+
+DDL commands are used to define and modify the structure of database tables. CREATE is used to create tables, ALTER modifies table structure, DROP deletes tables permanently, RENAME changes table name, and TRUNCATE removes all records from a table. Integrity constraints like PRIMARY KEY, FOREIGN KEY, NOT NULL, UNIQUE, and CHECK ensure data accuracy and consistency in the database.
+
+
+
+THEORY
+
+
+📌 Aim
+
+To study and execute SQL Data Definition Language (DDL) commands such as CREATE, ALTER, DROP, RENAME, and TRUNCATE, and to apply integrity constraints like PRIMARY KEY, FOREIGN KEY, NOT NULL, UNIQUE, and CHECK on database tables.
+
+
+---
+
+📘 Theory
+
+DDL (Data Definition Language) is a subset of SQL used to define and manage the structure of database objects such as tables.
+
+🔵 DDL Commands:
+
+CREATE → Used to create new tables or databases
+
+ALTER → Used to modify existing table structure (add/modify columns)
+
+DROP → Deletes the entire table or database permanently
+
+RENAME → Changes the name of a table
+
+TRUNCATE → Removes all records from a table but keeps structure
+
+
+🔵 Integrity Constraints:
+
+Integrity constraints ensure accuracy and consistency of data:
+
+PRIMARY KEY → Uniquely identifies each record
+
+FOREIGN KEY → Links two tables
+
+NOT NULL → Ensures column cannot be empty
+
+UNIQUE → Ensures all values are different
+
+CHECK → Ensures condition-based validation
+
+
+
+---
+
+💻 Syntax
+
+CREATE TABLE
+
+CREATE TABLE table_name (
+    column1 datatype PRIMARY KEY,
+    column2 datatype NOT NULL,
+    column3 datatype UNIQUE,
+    column4 datatype CHECK(condition),
+    column5 datatype,
+    FOREIGN KEY (column5) REFERENCES other_table(column)
+);
+
+
+---
+
+ALTER TABLE
+
+ALTER TABLE table_name
+ADD column_name datatype;
+
+ALTER TABLE table_name
+MODIFY column_name datatype;
+
+
+---
+
+DROP TABLE
+
+DROP TABLE table_name;
+
+
+---
+
+RENAME TABLE
+
+RENAME TABLE old_name TO new_name;
+
+
+---
+
+TRUNCATE TABLE
+
+TRUNCATE TABLE table_name;
+
+
+---
+
+🧾 Conclusion
+
+DDL commands are used to define and manage the structure of database tables. They help in creating, modifying, and deleting database objects. Integrity constraints ensure data accuracy and consistency by enforcing rules like uniqueness, validity, and relationships between tables.
+
+
+
+VIVA
+
+
+📌 Exp 2 — DDL + Constraints (Viva Questions)
+🔵 DDL (Data Definition Language)
+❓ What is DDL?
+DDL is a part of SQL used to define, modify, and delete database structures like tables.
+❓ What does CREATE do?
+It is used to create new database objects like tables, databases, or views.
+❓ What does ALTER do?
+It is used to modify the structure of an existing table (add, modify, or delete columns).
+🔵 Differences
+❓ Difference between DROP and TRUNCATE?
+DROP → Removes the entire table structure and data permanently
+TRUNCATE → Removes all records but keeps the table structure
+❓ Difference between TRUNCATE and DELETE?
+TRUNCATE → Removes all rows, faster, cannot use WHERE
+DELETE → Removes selected rows, can use WHERE, slower
+🔵 Keys in DBMS
+❓ What is PRIMARY KEY?
+A column that uniquely identifies each record in a table. It cannot be NULL.
+❓ What is COMPOSITE KEY?
+A primary key made using two or more columns together.
+❓ What is FOREIGN KEY?
+A column that links one table to another and maintains relationship between tables.
+❓ What is referential integrity?
+It ensures that relationships between tables remain consistent (no invalid foreign key values).
+🔵 Constraints
+❓ What does NOT NULL do?
+It ensures that a column cannot have NULL (empty) values.
+❓ What does UNIQUE do?
+It ensures all values in a column are different (no duplicates).
+❓ Difference between PRIMARY KEY and UNIQUE?
+PRIMARY KEY → No duplicates + No NULL + only one per table
+UNIQUE → No duplicates but allows NULL + multiple per table
+❓ What does CHECK constraint do?
+It ensures that values in a column satisfy a specific condition.
+❓ What does DEFAULT do?
+It assigns a default value to a column if no value is provided.
+🔵 Important Questions
+❓ Can a table have multiple UNIQUE keys?
+✔ Yes
+❓ Can a table have multiple PRIMARY keys?
+❌ No, only one PRIMARY KEY is allowed per table.
+❓ Can FOREIGN KEY have NULL values?
+✔ Yes, unless it is explicitly defined as NOT NULL.
+
+
+
+

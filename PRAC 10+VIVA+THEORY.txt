@@ -1,0 +1,170 @@
+use companyDB
+
+db.employees.insertMany([
+{ _id: 1, name: "Rahul", dept: "IT", salary: 5000, age: 25 },
+{ _id: 2, name: "Sneha", dept: "HR", salary: 6000, age: 28 },
+{ _id: 3, name: "Amit", dept: "IT", salary: 7000, age: 30 },
+{ _id: 4, name: "Neha", dept: "Finance", salary: 6500, age: 27 },
+{ _id: 5, name: "Riya", dept: "HR", salary: 5500, age: 26 }
+])
+
+db.employees.aggregate([
+{
+$group: {
+_id: "$dept",
+total_salary: { $sum: "$salary" }
+}
+}
+])
+
+db.employees.aggregate([
+{
+$group: {
+_id: "$dept",
+avg_salary: { $avg: "$salary" }
+}
+}
+])
+
+db.employees.aggregate([
+{ $match: { salary: { $gt: 5500 } } },
+{
+$group: {
+_id: "$dept",
+count: { $sum: 1 }
+}
+}
+])
+
+db.employees.aggregate([
+{ $sort: { salary: -1 } }
+])
+
+db.employees.createIndex({ dept: 1 })
+
+db.employees.createIndex({ dept: 1, salary: -1 })
+
+db.employees.getIndexes()
+
+db.employees.dropIndex({ dept: 1 })
+
+db.employees.find({ dept: "IT" })
+
+
+
+
+
+
+THEORY
+
+✅ Aim
+To design and execute MongoDB queries using aggregation and indexing techniques for efficient data analysis and improved query performance.
+✅ Theory
+MongoDB provides powerful features like Aggregation and Indexing to process and retrieve data efficiently.
+🔹 Aggregation
+Aggregation is used to process and analyze data by performing operations like:
+Grouping data
+Calculating sum, average, count
+Filtering and sorting
+It uses the aggregation pipeline, where data passes through multiple stages like:
+$match → filter data (like WHERE)
+$group → group data (like GROUP BY)
+$sort → sort data
+🔹 Indexing
+Indexing improves the speed of data retrieval.
+An index stores a small portion of data in an organized way
+It reduces the time required to search documents
+Without index → MongoDB scans full collection
+With index → faster lookup
+Types:
+Single field index
+Compound index (multiple fields)
+✅ Syntax
+🔹 Aggregation
+JavaScript
+db.collection.aggregate([
+  { $match: { condition } },
+  {
+    $group: {
+      _id: "$field",
+      result: { $sum / $avg / $count }
+    }
+  },
+  { $sort: { field: 1 or -1 } }
+])
+🔹 Indexing
+JavaScript
+-- Create index
+db.collection.createIndex({ field: 1 })
+
+-- Create compound index
+db.collection.createIndex({ field1: 1, field2: -1 })
+
+-- View indexes
+db.collection.getIndexes()
+
+-- Drop index
+db.collection.dropIndex({ field: 1 })
+✅ Conclusion
+Thus, aggregation and indexing techniques were successfully implemented in MongoDB. Aggregation helped in analyzing and summarizing data, while indexing improved query performance, making data retrieval faster and more efficient.
+
+
+
+VIVA
+
+
+Aggregation (MongoDB Viva Answers)
+🔹 What is Aggregation in MongoDB?
+Aggregation is a process of analyzing and processing data to get summarized results like sum, average, count, etc.
+🔹 What is Aggregation Pipeline?
+It is a sequence of stages where data passes step-by-step (like a pipeline) and gets transformed at each stage.
+🔹 What does $match do?
+Filters documents based on condition (like WHERE in SQL).
+🔹 What does $group do?
+Groups documents based on a field (like GROUP BY in SQL).
+🔹 What does $sort do?
+Sorts documents in ascending (1) or descending (-1) order.
+🔹 What does $project do?
+Selects specific fields to display (like SELECT in SQL).
+🔹 What does $limit do?
+Limits the number of documents returned.
+🔹 What does $sum do?
+Calculates the total sum of values.
+🔹 What does $avg do?
+Calculates the average value.
+🔹 Difference between find() and aggregate()?
+find()
+aggregate()
+Used for simple queries
+Used for complex data processing
+No grouping/analysis
+Supports grouping, calculations
+Faster for basic queries
+More powerful
+✅ Indexing (MongoDB Viva Answers)
+🔹 What is an Index?
+An index is a data structure that improves the speed of data retrieval.
+🔹 Why do we use Indexes?
+To make search and query operations faster.
+🔹 What does createIndex() do?
+Creates an index on a field to improve query performance.
+🔹 What is a default index in MongoDB?
+MongoDB automatically creates an index on the _id field.
+🔹 What is a compound index?
+An index created on multiple fields.
+🔹 Disadvantages of Index?
+Slows down INSERT/UPDATE
+Uses extra storage
+🔹 What is a unique index?
+Ensures that no duplicate values are allowed in that field.
+🔹 Difference between Index in SQL and MongoDB?
+SQL Index
+MongoDB Index
+Used in relational tables
+Used in collections
+Fixed schema
+Flexible schema
+Works on rows/columns
+Works on documents
+
+

@@ -1,0 +1,265 @@
+CODE
+
+📌 5. JOIN Operations and Views
+🟢 1. Create Sample Tables
+SQL
+CREATE DATABASE CollegeDB;
+USE CollegeDB;
+
+-- Student Table
+CREATE TABLE Students (
+    student_id INT PRIMARY KEY,
+    name VARCHAR(50),
+    dept_id INT
+);
+
+-- Department Table
+CREATE TABLE Departments (
+    dept_id INT PRIMARY KEY,
+    dept_name VARCHAR(50)
+);
+
+-- Marks Table
+CREATE TABLE Marks (
+    mark_id INT PRIMARY KEY,
+    student_id INT,
+    subject VARCHAR(50),
+    marks INT
+);
+🟢 2. Insert Sample Data
+SQL
+INSERT INTO Departments VALUES
+(1, 'Computer'),
+(2, 'IT'),
+(3, 'Mechanical');
+
+INSERT INTO Students VALUES
+(101, 'Asha', 1),
+(102, 'Ravi', 2),
+(103, 'Neha', 1),
+(104, 'Karan', NULL);
+
+INSERT INTO Marks VALUES
+(1, 101, 'DBMS', 85),
+(2, 101, 'OS', 78),
+(3, 102, 'DBMS', 90),
+(4, 103, 'OS', 88);
+🔵 3. JOIN OPERATIONS
+📌 INNER JOIN
+👉 Only matching records
+SQL
+SELECT s.student_id, s.name, d.dept_name
+FROM Students s
+INNER JOIN Departments d
+ON s.dept_id = d.dept_id;
+📌 LEFT JOIN
+👉 All students + matching departments
+SQL
+SELECT s.student_id, s.name, d.dept_name
+FROM Students s
+LEFT JOIN Departments d
+ON s.dept_id = d.dept_id;
+📌 RIGHT JOIN
+👉 All departments + matching students
+SQL
+SELECT s.student_id, s.name, d.dept_name
+FROM Students s
+RIGHT JOIN Departments d
+ON s.dept_id = d.dept_id;
+📌 CROSS JOIN
+👉 All combinations
+SQL
+SELECT s.name, d.dept_name
+FROM Students s
+CROSS JOIN Departments d;
+📌 JOIN with 3 Tables
+SQL
+SELECT s.name, d.dept_name, m.subject, m.marks
+FROM Students s
+INNER JOIN Departments d ON s.dept_id = d.dept_id
+INNER JOIN Marks m ON s.student_id = m.student_id;
+🟣 4. VIEWS
+📌 Create View
+👉 View = Virtual table (stored query)
+SQL
+CREATE VIEW student_dept_view AS
+SELECT s.student_id, s.name, d.dept_name
+FROM Students s
+JOIN Departments d
+ON s.dept_id = d.dept_id;
+📌 Use View
+SQL
+SELECT * FROM student_dept_view;
+📌 Update View (optional)
+SQL
+CREATE OR REPLACE VIEW student_dept_view AS
+SELECT s.name, d.dept_name
+FROM Students s
+JOIN Departments d
+ON s.dept_id = d.dept_id;
+📌 Drop View
+SQL
+DROP VIEW student_dept_view;
+
+
+
+
+
+THEORY
+
+📌 Aim
+To perform various JOIN operations and create/manage Views in MySQL to extract meaningful relationships between multiple tables.
+📘 Theory
+JOIN operations in DBMS are used to combine data from two or more tables based on a related column. They help in retrieving meaningful information when data is distributed across different tables.
+Types of JOIN:
+INNER JOIN: Returns only matching records from both tables.
+LEFT JOIN: Returns all records from left table and matched records from right table.
+RIGHT JOIN: Returns all records from right table and matched records from left table.
+CROSS JOIN: Returns Cartesian product (all possible combinations).
+A View is a virtual table created using a SQL query. It does not store data physically but displays data from one or more tables. Views are used to simplify complex queries and improve security by restricting direct access to tables.
+💻 Syntax
+INNER JOIN
+SQL
+SELECT columns
+FROM table1
+INNER JOIN table2
+ON table1.column = table2.column;
+LEFT JOIN
+SQL
+SELECT columns
+FROM table1
+LEFT JOIN table2
+ON table1.column = table2.column;
+RIGHT JOIN
+SQL
+SELECT columns
+FROM table1
+RIGHT JOIN table2
+ON table1.column = table2.column;
+CROSS JOIN
+SQL
+SELECT columns
+FROM table1
+CROSS JOIN table2;
+CREATE VIEW
+SQL
+CREATE VIEW view_name AS
+SELECT columns
+FROM table_name
+WHERE condition;
+🧾 Conclusion
+JOIN operations are used to combine rows from multiple tables based on related columns, helping in efficient data retrieval. Views are virtual tables that simplify complex queries and enhance security by limiting direct access to data.
+
+
+
+VIVA
+
+
+📌 Exp 5 — JOINs + Views (Viva Questions)
+
+
+---
+
+🔵 JOINs
+
+❓ What is INNER JOIN?
+
+It is a join that returns only the rows where there is a match in both tables based on the given condition.
+
+
+---
+
+❓ What is LEFT JOIN?
+
+It returns all records from the left table and matching records from the right table. If no match is found, NULL is returned for right table columns.
+
+
+---
+
+❓ What is RIGHT JOIN?
+
+It returns all records from the right table and matching records from the left table. If no match is found, NULL is returned for left table columns.
+
+
+---
+
+❓ What is CROSS JOIN?
+
+It returns all possible combinations of rows from both tables (Cartesian product).
+
+
+---
+
+❓ What is SELF JOIN?
+
+A SELF JOIN is when a table is joined with itself to compare rows within the same table.
+
+Example use: employee-manager relationship.
+
+
+---
+
+❓ What is Cartesian product?
+
+It is the result of a CROSS JOIN where every row of one table is combined with every row of another table, without any condition.
+
+
+---
+
+❓ Difference between INNER JOIN and LEFT JOIN?
+
+INNER JOIN → Returns only matching records from both tables
+
+LEFT JOIN → Returns all records from left table + matching records from right table (non-matching → NULL)
+
+
+
+---
+
+🟣 VIEWS
+
+
+---
+
+❓ What is a View?
+
+A View is a virtual table created from a SQL query. It does not store data physically.
+
+
+---
+
+❓ Does a View store data?
+
+No. A View is virtual and only stores the query, not the actual data.
+
+
+---
+
+❓ Why do we use Views?
+
+To simplify complex queries
+
+To improve security (hide sensitive columns)
+
+To reuse SQL queries easily
+
+To present data in a structured way
+
+
+
+---
+
+❓ Can you INSERT into a View?
+
+Yes, but only in simple views (single table, no joins, no aggregations). Complex views usually do not allow INSERT/UPDATE/DELETE.
+
+
+---
+
+❓ What is a Materialized View?
+
+A Materialized View stores actual data physically (precomputed results). It improves performance but needs manual refresh.
+
+👉 Note: MySQL does NOT support materialized views by default.
+
+

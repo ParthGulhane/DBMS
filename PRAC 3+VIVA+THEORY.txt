@@ -1,0 +1,241 @@
+CODE
+
+
+🟢 1. CREATE DATABASE
+SQL
+mysql> create database CollegeApp;
+Query OK, 1 row affected (0.01 sec)
+
+mysql> use CollegeApp;
+Database changed
+🟢 2. CREATE TABLES
+SQL
+mysql> create table Department (
+    -> dept_id int primary key,
+    -> dept_name varchar(50) not null
+    -> );
+Query OK, 0 rows affected (0.03 sec)
+SQL
+mysql> create table Students (
+    -> student_id int primary key,
+    -> name varchar(50) not null,
+    -> age int check(age >= 18),
+    -> dept_id int,
+    -> foreign key (dept_id) references Department(dept_id)
+    -> );
+Query OK, 0 rows affected (0.04 sec)
+🟢 3. INSERT DATA (DML)
+SQL
+mysql> insert into Department values
+    -> (1, 'Computer'),
+    -> (2, 'IT'),
+    -> (3, 'Mechanical');
+Query OK, 3 rows affected (0.01 sec)
+SQL
+mysql> insert into Students values
+    -> (101, 'Asha', 20, 1),
+    -> (102, 'Ravi', 19, 2),
+    -> (103, 'Neha', 21, 1),
+    -> (104, 'Karan', 20, NULL);
+Query OK, 4 rows affected (0.01 sec)
+🔵 4. DML OPERATIONS
+🟢 INSERT (new record)
+SQL
+mysql> insert into Students values (105, 'Pooja', 22, 3);
+🟢 UPDATE (Arithmetic Operator)
+SQL
+mysql> update Students
+    -> set age = age + 1
+    -> where dept_id = 1;
+Query OK, 2 rows affected (0.01 sec)
+🟢 DELETE
+SQL
+mysql> delete from Students
+    -> where student_id = 104;
+Query OK, 1 row affected (0.01 sec)
+🟢 Logical Operator
+SQL
+mysql> select * from Students
+    -> where dept_id = 1 and age > 20;
+🟢 Pattern Matching
+SQL
+mysql> select * from Students
+    -> where name like 'A%';
+🟢 String Function
+SQL
+mysql> select upper(name) as student_name
+    -> from Students;
+🟢 Set Operator (UNION)
+SQL
+mysql> select name from Students where dept_id = 1
+    -> union
+    -> select name from Students where age > 20;
+🟡 5. DCL (ACCESS CONTROL)
+🟢 CREATE USER
+SQL
+mysql> create user 'user1'@'localhost' identified by '1234';
+Query OK, 0 rows affected (0.01 sec)
+🟢 GRANT
+SQL
+mysql> grant select, insert on CollegeApp.* to 'user1'@'localhost';
+Query OK, 0 rows affected (0.01 sec)
+🟢 REVOKE
+SQL
+mysql> revoke insert on CollegeApp.* from 'user1'@'localhost';
+Query OK, 0 rows affected (0.01 sec)
+🟢 ROLE
+SQL
+mysql> create role 'student_role';
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> grant select on CollegeApp.* to 'student_role';
+
+mysql> grant 'student_role' to 'user1'@'localhost';
+🔵 6. TCL (TRANSACTION CONTROL)
+🟢 START TRANSACTION
+SQL
+mysql> start transaction;
+🟢 INSERT inside transaction
+SQL
+mysql> insert into Students values (106, 'Arpita', 19, 2);
+🟢 SAVEPOINT
+SQL
+mysql> savepoint sp1;
+🟢 ROLLBACK
+SQL
+mysql> rollback to sp1;
+🟢 COMMIT
+SQL
+mysql> commit;
+Query OK, 0 rows affected (0.01 sec)
+
+
+
+
+THEORY
+
+
+📌 Aim
+To design and execute SQL queries demonstrating Data Manipulation (DML), Access Control (DCL), and Transaction Control (TCL) operations using the CollegeApp database.
+📘 Theory
+SQL is divided into different categories based on functionality:
+🔵 1. Data Manipulation Language (DML)
+DML is used to manage and manipulate data stored in tables. It includes:
+INSERT → Adds new records
+UPDATE → Modifies existing records
+DELETE → Removes records
+DML also supports:
+Arithmetic operators ( +, -, *, / )
+Logical operators (AND, OR, NOT)
+Pattern matching (LIKE)
+String functions (UPPER, LOWER, etc.)
+Set operators (UNION, INTERSECT, etc.)
+🟡 2. Data Control Language (DCL)
+DCL is used to control access to the database:
+GRANT → Gives permissions to users
+REVOKE → Removes permissions
+ROLE → Group of privileges assigned to users
+🔴 3. Transaction Control Language (TCL)
+TCL manages database transactions to ensure data consistency:
+START TRANSACTION → Begins a transaction
+COMMIT → Saves changes permanently
+ROLLBACK → Undoes changes
+SAVEPOINT → Creates checkpoints within a transaction
+💻 Syntax
+🟢 DML
+SQL
+INSERT INTO table_name VALUES (...);
+
+UPDATE table_name
+SET column = value
+WHERE condition;
+
+DELETE FROM table_name
+WHERE condition;
+🟡 DCL
+SQL
+GRANT privilege ON database.* TO 'user'@'localhost';
+
+REVOKE privilege ON database.* FROM 'user'@'localhost';
+
+CREATE ROLE role_name;
+GRANT role_name TO 'user'@'localhost';
+🔴 TCL
+SQL
+START TRANSACTION;
+
+SAVEPOINT savepoint_name;
+
+ROLLBACK TO savepoint_name;
+
+COMMIT;
+🧾 Conclusion
+DML is used to manipulate data in tables, DCL is used to control user access and permissions, and TCL is used to manage database transactions safely. Together, these SQL categories ensure efficient, secure, and reliable database operations in real-world applications.
+
+
+
+
+
+VIVA
+
+
+🔵 DML (Data Manipulation Language)
+❓ What is DML?
+DML is a set of SQL commands used to manipulate data stored in database tables.
+❓ What does INSERT do?
+It is used to add new records into a table.
+❓ What does UPDATE do?
+It is used to modify existing records in a table.
+❓ What does DELETE do?
+It is used to remove records from a table.
+❓ What is LIKE operator?
+It is used for pattern matching in SQL queries.
+❓ What does % mean in LIKE?
+It represents any number of characters (including zero characters).
+❓ What does _ mean in LIKE?
+It represents exactly one character.
+❓ Difference between UNION and UNION ALL?
+UNION → Removes duplicate records
+UNION ALL → Includes all records including duplicates
+🟡 DCL (Data Control Language)
+❓ What is GRANT?
+It is used to give permissions to users on database objects.
+❓ What is REVOKE?
+It is used to remove permissions from users.
+🔴 TCL (Transaction Control Language)
+❓ What is a Transaction?
+A transaction is a group of SQL operations executed as a single unit.
+❓ What does COMMIT do?
+It permanently saves all changes made in a transaction.
+❓ What does ROLLBACK do?
+It undoes changes made in the current transaction.
+❓ What does SAVEPOINT do?
+It creates a checkpoint inside a transaction to which we can rollback.
+❓ Can you rollback after COMMIT?
+❌ No, once COMMIT is done, changes are permanent.
+🧬 ACID PROPERTIES
+❓ What are ACID properties?
+ACID ensures reliable processing of database transactions:
+Atomicity
+Consistency
+Isolation
+Durability
+❓ What is Atomicity?
+It ensures “all or nothing” execution of a transaction.
+❓ What is Consistency?
+It ensures the database moves from one valid state to another valid state.
+❓ What is Isolation?
+It ensures transactions do not interfere with each other.
+❓ What is Durability?
+It ensures that once a transaction is committed, it remains permanent even after system failure.
+❓ Which property ensures all-or-nothing?
+✔ Atomicity
+❓ Which command ensures Durability?
+✔ COMMIT
+
+
+
+
+
+
+

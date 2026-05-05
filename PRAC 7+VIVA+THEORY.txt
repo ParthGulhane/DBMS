@@ -1,0 +1,236 @@
+CREATE TABLE Student (
+    id INT PRIMARY KEY,
+    name VARCHAR(50)
+);
+
+INSERT INTO Student VALUES
+(1, 'Rahul'),
+(2, 'Sneha'),
+(3, 'Amit');
+
+DELIMITER //
+
+CREATE PROCEDURE getAllStudents()
+BEGIN
+    DECLARE done INT DEFAULT 0;
+    DECLARE s_name VARCHAR(50);
+
+    -- Cursor declaration
+    DECLARE cur CURSOR FOR 
+        SELECT name FROM Student;
+
+    -- Handler when no more rows
+    DECLARE CONTINUE HANDLER FOR NOT FOUND 
+        SET done = 1;
+
+    -- Temporary table to store result
+    CREATE TEMPORARY TABLE temp_students (
+        name VARCHAR(50)
+    );
+
+    -- Open cursor
+    OPEN cur;
+
+    read_loop: LOOP
+        FETCH cur INTO s_name;
+
+        IF done THEN
+            LEAVE read_loop;
+        END IF;
+
+        INSERT INTO temp_students VALUES (s_name);
+    END LOOP;
+
+    -- Close cursor
+    CLOSE cur;
+
+    -- Show result
+    SELECT * FROM temp_students;
+END //
+
+DELIMITER ;
+
+CALL getAllStudents();
+
+
+
+
+
+
+
+
+
+
+
+
+VIVA 
+
+
+Viva Questions - Experiment 7
+
+Q: What is a stored procedure?
+
+cal - AISSMS College of Engineering, Pune
+
+→ A named, precompiled block of SQL stored in the database. Executed using CALL. Accepts IN, OUT, INOUT parameters. Runs on the server - reduces network traffic.
+
+Q: Difference: procedure vs function
+
+Function MUST return a value and can be used in SELECT. Procedure returns nothing directly (uses OUT params) and is called with CALL. Procedures can have transactions; functions cannot.
+
+Q: What is DELIMITER and why do we use it?
+
+→ MySQL uses; to end statements. A procedure body contains multiple; lines. We change the delimiter to // so MySQL treats the entire procedure as one unit until //, then restore to;.
+
+Q: What is a cursor?
+
+→ A pointer to a row in a query result set. Allows row-by-row processing inside a procedure. Steps: DECLARE → OPEN FETCH in LOOP CLOSE.
+
+Q: What is NOT FOUND handler?
+
+DECLARE CONTINUE HANDLER FOR NOT FOUND fires when FETCH finds no more rows. We set a done flag = 1 and LEAVE the loop. Without this the procedure would error at the last FETCH.
+
+Q: What does DETERMINISTIC mean in a function?
+
+→ Tells MySQL the function always returns the same result for the same input. Required for some replication setups. Opposite is NOT DETERMINISTIC (result can vary - e.g. uses NOW() or RAND ()).
+
+Q: IN vs OUT vs INOUT?
+
+IN: value passed in, cannot be modified. OUT: variable receives value from procedure. INOUT: passes a value in, procedure modifies and returns it.
+
+
+*Always restore DELIMITER to; after creating the procedure.
+
+* DECLARE statements must appear BEFORE any executable code inside BEGIN...END. 
+*Cursor result set is static - fetches the rows as they were when OPEN was called. 
+*Cursors are forward-only - you can only FETCH the next row, never go back.
+* For OUT params: CALL proc(arg, @var); then SELECT @var; to see the result. 
+*DROP PROCEDURE IF EXISTS avoids errors if the procedure doesn't exist yet.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+THEORY
+
+
+✅ Aim
+To create and execute a stored procedure / function using a cursor in MySQL to process records row by row.
+✅ Theory
+A Stored Procedure is a precompiled collection of SQL statements stored in the database and executed when required. It improves performance and reduces code repetition.
+A Function is similar to a stored procedure but always returns a value.
+A Cursor is a database object used to retrieve data row by row from a result set. Unlike normal queries that process all rows at once, cursors allow sequential processing.
+🔹 Why use Cursor?
+When row-by-row processing is needed
+When applying logic to each record
+Useful in loops and conditional operations
+🔹 Types of Cursor in MySQL:
+Implicit Cursor (automatic)
+Explicit Cursor (user-defined)
+✅ Syntax
+🔹 Stored Procedure with Cursor
+DELIMITER //
+
+CREATE PROCEDURE procedure_name()
+BEGIN
+    DECLARE done INT DEFAULT 0;
+    DECLARE variable datatype;
+
+    DECLARE cursor_name CURSOR FOR
+        SELECT column FROM table_name;
+
+    DECLARE CONTINUE HANDLER FOR NOT FOUND
+        SET done = 1;
+
+    OPEN cursor_name;
+
+    read_loop: LOOP
+        FETCH cursor_name INTO variable;
+
+        IF done THEN
+            LEAVE read_loop;
+        END IF;
+
+        -- operations
+
+    END LOOP;
+
+    CLOSE cursor_name;
+END //
+
+DELIMITER ;
+
+Function Syntax 
+DELIMITER //
+
+CREATE FUNCTION function_name()
+RETURNS datatype
+DETERMINISTIC
+BEGIN
+    DECLARE variable datatype;
+
+    -- logic
+
+    RETURN variable;
+END //
+
+DELIMITER ;
+
+
+✅ Conclusion
+Thus, we successfully created and executed a stored procedure / function using a cursor. The cursor helped in processing records one by one, demonstrating how row-wise operations can be performed efficiently in MySQL. This concept is useful in real-world applications where individual record handling is required.
+
+
+

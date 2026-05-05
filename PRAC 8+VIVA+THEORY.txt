@@ -1,0 +1,208 @@
+CREATE TABLE employees (
+    emp_id INT PRIMARY KEY,
+    emp_name VARCHAR(50),
+    salary INT
+);
+
+CREATE TABLE employee_log (
+    log_id INT AUTO_INCREMENT PRIMARY KEY,
+    emp_id INT,
+    action_type VARCHAR(20),
+    action_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+ 
+DELIMITER //
+
+CREATE TRIGGER trg_check_salary
+BEFORE INSERT ON employees
+FOR EACH ROW
+BEGIN
+    IF NEW.salary <= 0 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Salary must be greater than 0';
+    END IF;
+END //
+
+DELIMITER ;
+
+
+
+DELIMITER //
+
+CREATE TRIGGER trg_after_insert
+AFTER INSERT ON employees
+FOR EACH ROW
+BEGIN
+    INSERT INTO employee_log(emp_id, action_type)
+    VALUES (NEW.emp_id, 'INSERT');
+END //
+
+DELIMITER ;
+
+
+
+-- Valid insert
+INSERT INTO employees VALUES (1, 'Rahul', 5000);
+
+-- Invalid insert (will show error)
+INSERT INTO employees VALUES (2, 'Sneha', -1000);
+
+-- Check log
+SELECT * FROM employee_log;
+
+
+
+DELIMITER //
+
+CREATE TRIGGER trg_after_delete
+AFTER DELETE ON employees
+FOR EACH ROW
+BEGIN
+    INSERT INTO employee_log(emp_id, action_type)
+    VALUES (OLD.emp_id, 'DELETE');
+END //
+
+DELIMITER ;
+
+
+
+
+
+VIVA
+
+Viva Questions -
+
+Experiment 8
+
+Q: What is a trigger?
+
+A stored SQL block that automatically fires when a specific DML event (INSERT, UPDATE, DELETE) occurs on a table. Cannot be called manually - invoked by the database engine.
+
+Q: BEFORE vs AFTER trigger - when to use which?
+
+→ BEFORE: for validation, preventing invalid data, modifying NEW values before saving. AFTER: for logging, audit trails, cascading changes to other tables after the operation completes.
+
+Q: What are OLD and NEW in triggers?
+
+NEW = new row data in INSERT/UPDATE. OLD = previous row data in UPDATE/DELETE. INSERT only has NEW. DELETE only has OLD. UPDATE has both OLD and NEW.
+
+Q: How do you abort an operation inside a trigger?
+
+Use SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'message'. This raises an error and cancels the DML operation. Only works in BEFORE triggers.
+
+Q: Can you modify NEW values inside a trigger?
+
+DBMS Practical - AISSMS College of Engineering, Pune
+
+→ Yes - only in BEFORE triggers. SET NEW.column = value changes the value before it's saved to the table. In AFTER triggers, the row is already committed so NEW cannot be changed.
+
+Q: Difference: trigger vs stored procedure?
+
+Trigger: fires automatically on DML event, no parameters, cannot call manually. Procedure: called explicitly with CALL, accepts parameters, flexible execution.
+
+Q: Can you use COMMIT or ROLLBACK inside a trigger?
+
+→ No. Triggers run as part of the triggering transaction. Using COMMIT/ROLLBACK inside a trigger causes an error in MySQL.
+
+Q: What is FOR EACH ROW?
+
+→ MySQL only supports row-level triggers. FOR EACH ROW means the trigger fires once per affected row. E.g. if UPDATE affects 5 rows, the trigger fires 5 times.
+
+
+
+CODE EXPLANATION 
+
+✅ Code Explanation (Line by Line)
+🔹 DELIMITER //
+Changes the default delimiter from ; to //
+Needed because trigger body contains multiple SQL statements
+🔹 CREATE TRIGGER trg_after_delete
+Creates a trigger named trg_after_delete
+Naming is user-defined
+🔹 AFTER DELETE ON employees
+Trigger executes after a record is deleted
+It is attached to the employees table
+🔹 FOR EACH ROW
+Trigger runs once for every row deleted
+Important when multiple rows are deleted
+🔹 BEGIN ... END
+Defines the block of SQL statements inside the trigger
+🔹 INSERT INTO employee_log(emp_id, action_type)
+Inserts a record into the log table
+Used for tracking/auditing delete operations
+🔹 VALUES (OLD.emp_id, 'DELETE');
+OLD.emp_id → stores value of deleted row
+'DELETE' → action type for tracking
+This ensures we know which record was deleted
+🔹 END //
+Ends the trigger definition
+🔹 DELIMITER ;
+Resets delimiter back to normal
+🧠 Overall Logic (One Line)
+👉 Whenever a record is deleted from employees, its ID is automatically stored in employee_log.
+🔥 Why we use this trigger
+Maintain data integrity
+Keep audit/history of deletions
+Avoid manual logging
+🎯 Viva Questions You Might Get
+❓ Why AFTER DELETE and not BEFORE DELETE?
+👉 AFTER ensures deletion is successful before logging
+❓ What is OLD keyword?
+👉 It stores the previous values of the row before deletion
+❓ Can we use NEW here?
+👉 ❌ No, because row is deleted (no new value exists)
+❓ What happens if multiple rows are deleted?
+👉 Trigger runs for each row individually
+❓ Can we have multiple triggers on same table?
+👉 ✅ Yes (but depends on MySQL version and event type)
+
+
+
+
+
+
+
+THEORY
+
+
+✅ Aim
+To implement and test database triggers in MySQL to maintain data integrity.
+✅ Theory
+A Trigger is a special type of stored program that automatically executes in response to certain events on a table such as INSERT, UPDATE, or DELETE.
+Triggers are mainly used to:
+Maintain data integrity
+Enforce business rules
+Automatically log changes (audit)
+Prevent invalid data entry
+🔹 Types of Triggers
+BEFORE Trigger – Executes before the event
+AFTER Trigger – Executes after the event
+🔹 Trigger Events
+INSERT
+UPDATE
+DELETE
+🔹 Keywords Used
+NEW → refers to new values (INSERT/UPDATE)
+OLD → refers to old values (UPDATE/DELETE)
+
+
+SYNTAX
+
+DELIMITER //
+
+CREATE TRIGGER trigger_name
+BEFORE/AFTER INSERT/UPDATE/DELETE
+ON table_name
+FOR EACH ROW
+BEGIN
+    -- trigger logic
+END //
+
+DELIMITER ;
+
+✅ Conclusion
+Thus, we successfully implemented and tested database triggers in MySQL. Triggers help in automatically enforcing rules and maintaining data integrity without manual intervention, making database operations more reliable and secure.
+
+
+
